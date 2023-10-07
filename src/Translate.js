@@ -14,15 +14,32 @@ const Translate = () => {
     const [input, setInput] = useState('');
     const [output, setOutput] = useState('');
     const [copied, setCopied] = useState(false);
+    const [copied1, setCopied1] = useState(false);
 
-    const handleCopyClick = () => {
+    const handleCopyInputClick = () => {
         navigator.clipboard.writeText(input).then(() => {
             setCopied(true);
 
             // Clear the "Copied" message after a few seconds
             setTimeout(() => {
                 setCopied(false);
-            }, 2000);
+            }, 1000);
+        });
+    };
+
+    const handleCloseClick = () => {
+        setInput('');
+        setOutput('');
+    }
+
+    const handleCopyOutputClick = () => {
+        navigator.clipboard.writeText(output).then(() => {
+            setCopied1(true);
+
+            // Clear the "Copied" message after a few seconds
+            setTimeout(() => {
+                setCopied1(false);
+            }, 1000);
         });
     };
 
@@ -61,7 +78,7 @@ const Translate = () => {
             <h1>Language Translator</h1>
 
             <div className="language-select">
-                <select onChange={(e) => setFrom(e.target.value)}>
+                <select className='select-container1' onChange={(e) => setFrom(e.target.value)}>
                     {options.map((opt) => (
                         <option key={opt.code} value={opt.code}>
                             {opt.name}
@@ -69,7 +86,7 @@ const Translate = () => {
                     ))}
                 </select>
                 <span className="arrow">➜</span>
-                <select onChange={(e) => setTo(e.target.value)}>
+                <select className='select-container2' onChange={(e) => setTo(e.target.value)}>
                     {options.map((opt) => (
                         <option key={opt.code} value={opt.code}>
                             {opt.name}
@@ -80,17 +97,62 @@ const Translate = () => {
 
             <div className="text-container">
                 <div className="text-box">
+                    {
+                        input && <button className='cancel-btn' onClick={handleCloseClick}>X</button>
+                    }
                     <textarea
                         cols="40"
                         rows="7"
                         placeholder="Enter Text...."
                         onInput={(e) => setInput(e.target.value)}
+                        value={input}
                     ></textarea>
+                    {input && <div className="copy-container">
+                        <button onClick={handleCopyInputClick} className="copy-button">
+                            {copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+                        </button>
+                    </div>
+
+                    }
                 </div>
-                <div className="text-box">
-                    <textarea cols="40" rows="7" placeholder="Translation..." value={output}></textarea>
+                <div className="text-box text1">
+                    <textarea cols="40" rows="7" placeholder='Translation...' value={output}></textarea>
+                    {output && <div className="copy-container">
+                        <button onClick={handleCopyOutputClick} className="copy-button">
+                            {copied1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCheck} />}
+                        </button>
+                        <button onClick={handleCopyOutputClick} className="copy-button">
+                            {copied1 ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+                        </button>
+                    </div>}
                 </div>
             </div>
+            {/* <ul className="controls">
+                <li className="row from">
+                    <div className="copy-container">
+                        <button onClick={handleCopyClick} className="copy-button">
+                            {copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+                        </button>
+                    </div>
+                    {copied && (
+                        <div className="copy-popup">
+                            <p>Copied!</p>
+                        </div>
+                    )}
+                </li>
+                <li className="row to">
+                    <div className="copy-container">
+                        <button onClick={handleCopyClick} className="copy-button">
+                            {copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+                        </button>
+                    </div>
+                    {copied && (
+                        <div className="copy-popup">
+                            <p>Copied!</p>
+                        </div>
+                    )}
+                </li>
+            </ul> */}
             <button onClick={translate}>Translate</button>
         </div>
     );
